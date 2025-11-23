@@ -14,4 +14,4 @@ kk_test_fail "Test 2"
 kk_test_start "Test 3 - should pass"
 kk_test_pass "Test 3"
 
-echo __COUNTS__:$TESTS_TOTAL:$TESTS_PASSED:$TESTS_FAILED
+

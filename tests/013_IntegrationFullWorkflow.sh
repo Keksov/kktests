@@ -88,4 +88,4 @@ else
     kk_test_fail "Counter increment failed (initial_passed: $initial_passed, current_passed: $TESTS_PASSED, expected: $((initial_passed + 5)))"
 fi
 
-echo __COUNTS__:$TESTS_TOTAL:$TESTS_PASSED:$TESTS_FAILED
+

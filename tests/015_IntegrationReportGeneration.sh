@@ -254,4 +254,4 @@ else
     kk_test_fail "Framework verification failed"
 fi
 
-echo __COUNTS__:$TESTS_TOTAL:$TESTS_PASSED:$TESTS_FAILED
+

@@ -34,4 +34,4 @@ else
     kk_test_fail "No test files discovered"
 fi
 
-echo __COUNTS__:$TESTS_TOTAL:$TESTS_PASSED:$TESTS_FAILED
+

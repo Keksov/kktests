@@ -205,6 +205,12 @@ kk_test_show_results() {
     local failed="${TESTS_FAILED:-0}"
     local -a failed_files=("$@")
     
+    # Normalize: if TESTS_PASSED > TESTS_TOTAL, cap it to TESTS_TOTAL
+    # (this handles cases where test_pass is called multiple times per test_start)
+    if (( passed > total )); then
+        passed=$total
+    fi
+    
     if [[ "$VERBOSITY" == "info" ]]; then
         echo ""
         echo -e "${CYAN}========================================${NC}"
