@@ -42,7 +42,7 @@ kk_runner_execute_tests "$SCRIPT_DIR"
 
 # Display final results
 echo ""
-kk_test_show_results
+kk_test_show_results "${FAILED_TEST_FILES[@]}"
 
 # Exit with appropriate code
 exit $?

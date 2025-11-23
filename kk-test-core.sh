@@ -193,11 +193,12 @@ kk_test_accumulate_counts() {
 # ============================================================================
 
 # Show test results summary
-# Usage: kk_test_show_results
+# Usage: kk_test_show_results [failed_file1 failed_file2 ...]
 kk_test_show_results() {
     local total="${TESTS_TOTAL:-0}"
     local passed="${TESTS_PASSED:-0}"
     local failed="${TESTS_FAILED:-0}"
+    local -a failed_files=("$@")
     
     if [[ "$VERBOSITY" == "info" ]]; then
         echo ""
@@ -212,11 +213,25 @@ kk_test_show_results() {
             echo -e "${GREEN}✓ All tests passed!${NC}"
         else
             echo -e "${RED}✗ $failed test(s) failed.${NC}"
+            if [[ ${#failed_files[@]} -gt 0 ]]; then
+                echo -e "${RED}Failed test files:${NC}"
+                for f in "${failed_files[@]}"; do
+                    echo -e "  ${RED}[FAIL]${NC} $f"
+                done
+            fi
         fi
     else
         echo "Total tests: $total"
         echo "Passed: $passed"
         echo "Failed: $failed"
+        
+        # Always show failed test files, even in error mode
+        if [[ $failed -gt 0 ]] && [[ ${#failed_files[@]} -gt 0 ]]; then
+            echo "Failed test files:"
+            for f in "${failed_files[@]}"; do
+                echo "  [FAIL] $f"
+            done
+        fi
     fi
     
     return "$((failed > 0 ? 1 : 0))"

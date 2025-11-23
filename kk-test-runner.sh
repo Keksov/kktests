@@ -28,6 +28,9 @@ declare -g WORKERS=8
 # Array of selected test numbers
 declare -ga TESTS_TO_RUN=()
 
+# Array of failed test file names
+declare -ga FAILED_TEST_FILES=()
+
 # ============================================================================
 # Test Selection Parsing
 # ============================================================================
@@ -139,7 +142,7 @@ kk_runner_parse_args() {
     fi
     
     # Export for subshells
-    export VERBOSITY MODE WORKERS TEST_SELECTION
+    export VERBOSITY MODE WORKERS TEST_SELECTION FAILED_TEST_FILES
 }
 
 # Show usage information
@@ -256,34 +259,45 @@ kk_runner_execute_sequential() {
         kk_test_debug "Executing: $(basename "$clean_file")"
         
         # Run test in subshell to isolate state
-        output="$(
-            bash -c "
-                export VERBOSITY='$VERBOSITY'
-                source '$clean_file'
-                echo __COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED
-            " 2>&1 || true
-        )"
-        
-        # Parse counters from output
-        counts_line="$(printf '%s\n' "$output" | sed -e 's/\r$//' | grep '^__COUNTS__:' | tail -n 1)"
-        
-        if [[ -n "$counts_line" ]]; then
-            IFS=':' read -r _ t p f <<<"$counts_line"
-            t=${t:-0}; p=${p:-0}; f=${f:-0}
-            TESTS_TOTAL=$((TESTS_TOTAL + t))
-            TESTS_PASSED=$((TESTS_PASSED + p))
-            TESTS_FAILED=$((TESTS_FAILED + f))
-        else
-            # Test failed to report counters
-            TESTS_TOTAL=$((TESTS_TOTAL + 1))
-            TESTS_FAILED=$((TESTS_FAILED + 1))
-            kk_test_fail "$(basename "$clean_file") (no counters reported)"
-        fi
-        
-        # Show output on verbose or failure
-        if [[ "$VERBOSITY" == "info" ]] || ((f > 0)); then
-            echo "$output" | sed -e 's/\r$//' | grep -v '^__COUNTS__:' || true
-        fi
+         output="$(
+             bash -c "
+                 export VERBOSITY='$VERBOSITY'
+                 source '$clean_file'
+                 echo __COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED
+             " 2>&1 || true
+         )"
+         
+         # Parse counters from output
+         counts_line="$(printf '%s\n' "$output" | sed -e 's/\r$//' | grep '^__COUNTS__:' | tail -n 1)"
+         
+         if [[ -n "$counts_line" ]]; then
+             IFS=':' read -r _ t p f <<<"$counts_line"
+             t=${t:-0}; p=${p:-0}; f=${f:-0}
+             TESTS_TOTAL=$((TESTS_TOTAL + t))
+             TESTS_PASSED=$((TESTS_PASSED + p))
+             TESTS_FAILED=$((TESTS_FAILED + f))
+             
+             # Track failed test files
+             if ((f > 0)); then
+                 FAILED_TEST_FILES+=("$(basename "$clean_file")")
+             fi
+         else
+             # Test failed to report counters
+             TESTS_TOTAL=$((TESTS_TOTAL + 1))
+             TESTS_FAILED=$((TESTS_FAILED + 1))
+             local test_name="$(basename "$clean_file")"
+             kk_test_fail "$test_name"
+             FAILED_TEST_FILES+=("$test_name")
+         fi
+         
+         # Always show errors and warnings in all verbosity modes
+         # Show full output on verbose or failure
+         if [[ "$VERBOSITY" == "info" ]] || ((f > 0)); then
+             echo "$output" | sed -e 's/\r$//' | grep -v '^__COUNTS__:' || true
+         else
+             # In error mode, still show [ERROR], [FAIL], and [WARN] messages
+             echo "$output" | sed -e 's/\r$//' | grep -E '^\[ERROR\]|\[FAIL\]|\[WARN\]|: No such file|: command not found' | grep -v '^__COUNTS__:' || true
+         fi
     done
 }
 
