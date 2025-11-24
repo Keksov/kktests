@@ -61,7 +61,8 @@ kk_test_start "kk_runner_execute_sequential with multiple test files"
 initial_total=$TESTS_TOTAL
 initial_passed=$TESTS_PASSED
 initial_failed=$TESTS_FAILED
-kk_runner_execute_sequential "$TEST_DIR/test1.sh" "$TEST_DIR/test2.sh" "$TEST_DIR/test3.sh"
+# Suppress all output from test execution while preserving counter tracking
+_KK_ASSERT_QUIET_MODE=quiet _KK_TEST_QUIET_MODE=1 kk_runner_execute_sequential "$TEST_DIR/test1.sh" "$TEST_DIR/test2.sh" "$TEST_DIR/test3.sh" >/dev/null 2>&1
 final_total=$TESTS_TOTAL
 final_passed=$TESTS_PASSED
 final_failed=$TESTS_FAILED

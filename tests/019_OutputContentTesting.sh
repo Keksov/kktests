@@ -17,7 +17,7 @@ fi
 # Test kk_assert_output_contains fails with non-matching content
 kk_test_start "kk_assert_output_contains fails with non-matching content"
 output="Hello world"
-if ! kk_assert_quiet kk_assert_output_contains "$output" "xyz" "Non-matching test" then
+if ! kk_assert_quiet kk_assert_output_contains "$output" "xyz" "Non-matching test"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -35,7 +35,7 @@ fi
 # Test kk_assert_output_not_contains fails with matching content
 kk_test_start "kk_assert_output_not_contains fails with matching content"
 output="Hello world"
-if ! kk_assert_quiet kk_assert_output_not_contains "$output" "world" "Matching test" then
+if ! kk_assert_quiet kk_assert_output_not_contains "$output" "world" "Matching test"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -53,7 +53,7 @@ fi
 # Test kk_assert_output_matches fails with non-matching pattern
 kk_test_start "kk_assert_output_matches fails with non-matching pattern"
 output="TestABC"
-if ! kk_assert_quiet kk_assert_output_matches "$output" "[0-9]+" "Non-matching pattern" then
+if ! kk_assert_quiet kk_assert_output_matches "$output" "[0-9]+" "Non-matching pattern"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -91,7 +91,7 @@ fi
 # Test with empty output
 kk_test_start "kk_assert_output_contains with empty output"
 empty_output=""
-if ! kk_assert_quiet kk_assert_output_contains "$empty_output" "content" "Empty output test" then
+if ! kk_assert_quiet kk_assert_output_contains "$empty_output" "content" "Empty output test"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -136,7 +136,7 @@ fi
 # Test case sensitivity
 kk_test_start "kk_assert_output_contains case sensitivity"
 case_output="Hello World"
-if ! kk_assert_quiet kk_assert_output_contains "$case_output" "hello" "Case sensitive test" then
+if ! kk_assert_quiet kk_assert_output_contains "$case_output" "hello" "Case sensitive test"; then
     kk_test_pass "Assertion correctly failed (case sensitive)"
 else
     kk_test_fail "Assertion should have failed (case sensitive)"
@@ -145,7 +145,7 @@ fi
 # Test kk_assert_output_not_contains with empty search string
 kk_test_start "kk_assert_output_not_contains with empty search string"
 output="test content"
-if ! kk_assert_quiet kk_assert_output_not_contains "$output" "" "Empty search string" then
+if ! kk_assert_quiet kk_assert_output_not_contains "$output" "" "Empty search string"; then
     kk_test_pass "Assertion correctly failed (empty string is always found)"
 else
     kk_test_fail "Assertion should have failed"

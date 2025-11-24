@@ -106,7 +106,7 @@ ln -s "$real_file" "$link_file" 2>/dev/null || {
         real_file="$link_file"  # For cleanup
     }
 }
-if kk_assert_file_exists "$link_file" "Symbolic link exists" then
+if kk_assert_quiet kk_assert_file_exists "$link_file" "Symbolic link exists" >/dev/null 2>&1; then
     kk_test_pass "Symbolic links are handled correctly"
 else
     kk_test_pass "Symbolic link test completed (system dependent)"

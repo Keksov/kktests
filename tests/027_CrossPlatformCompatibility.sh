@@ -202,7 +202,7 @@ fi
 # Test network and connectivity
 kk_test_start "Network connectivity test"
 # Test basic network operations (non-blocking)
-if (ping -c 1 -W 1 127.0.0.1 2>/dev/null || ping -n 1 -w 1 127.0.0.1 2>/dev/null); then
+if (ping -c 1 -W 1 127.0.0.1 >/dev/null 2>&1 || ping -n 1 -w 1 127.0.0.1 >/dev/null 2>&1); then
     kk_test_pass "Network connectivity available"
 else
     kk_test_pass "Network connectivity test skipped"

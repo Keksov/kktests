@@ -16,20 +16,20 @@ fi
 
 # Test kk_assert_array_contains fails with non-existing value
 kk_test_start "kk_assert_array_contains fails with non-existing value"
-if ! kk_assert_quiet kk_assert_array_contains test_arr "grape" "Non-existing test" then
-    kk_test_pass "Assertion correctly failed"
-else
-    kk_test_fail "Assertion should have failed"
-fi
-
-# Test kk_assert_array_contains with empty array
-kk_test_start "kk_assert_array_contains with empty array"
-declare -a empty_arr=()
-if ! kk_assert_quiet kk_assert_array_contains empty_arr "anything" "Empty array test" then
-    kk_test_pass "Assertion correctly failed"
-else
-    kk_test_fail "Assertion should have failed"
-fi
+if ! kk_assert_quiet kk_assert_array_contains test_arr "grape" "Non-existing test"; then
+     kk_test_pass "Assertion correctly failed"
+ else
+     kk_test_fail "Assertion should have failed"
+ fi
+ 
+ # Test kk_assert_array_contains with empty array
+ kk_test_start "kk_assert_array_contains with empty array"
+ declare -a empty_arr=()
+ if ! kk_assert_quiet kk_assert_array_contains empty_arr "anything" "Empty array test"; then
+     kk_test_pass "Assertion correctly failed"
+ else
+     kk_test_fail "Assertion should have failed"
+ fi
 
 # Test kk_assert_array_contains with numbers
 kk_test_start "kk_assert_array_contains with numeric values"
@@ -61,7 +61,7 @@ fi
 # Test kk_assert_array_contains with case sensitivity
 kk_test_start "kk_assert_array_contains case sensitivity"
 declare -a case_arr=("Hello" "World" "Test")
-if ! kk_assert_quiet kk_assert_array_contains case_arr "hello" "Case sensitive test" then
+if ! kk_assert_quiet kk_assert_array_contains case_arr "hello" "Case sensitive test"; then
     kk_test_pass "Assertion correctly failed (case sensitive)"
 else
     kk_test_fail "Assertion should have failed (case sensitive)"
@@ -153,7 +153,7 @@ fi
 kk_test_start "kk_assert_array_contains array reference test"
 declare -a test_arr1=("value1" "value2")
 declare -a test_arr2=("different" "values")
-if ! kk_assert_quiet kk_assert_array_contains test_arr1 "different" "Array reference test" then
+if ! kk_assert_quiet kk_assert_array_contains test_arr1 "different" "Array reference test"; then
     kk_test_pass "Array reference works correctly"
 else
     kk_test_fail "Array reference test failed"

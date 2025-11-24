@@ -23,7 +23,7 @@ fi
 # Test kk_fixture_cleanup_unregister with non-existing handler
 kk_test_start "kk_fixture_cleanup_unregister with non-existing handler"
 initial_count=${#_KK_CLEANUP_HANDLERS[@]}
-kk_fixture_cleanup_unregister "nonexistent_handler"
+kk_warn_quiet kk_fixture_cleanup_unregister "nonexistent_handler"
 if (( ${#_KK_CLEANUP_HANDLERS[@]} == initial_count )); then
     kk_test_pass "Non-existing handler cleanup handled gracefully"
 else

@@ -308,6 +308,21 @@ kk_test_validate_workers() {
 }
 
 # ============================================================================
+# Warning Suppression Helper
+# ============================================================================
+
+# Temporarily suppress WARN messages while executing a command
+# Usage: kk_warn_quiet command arg1 arg2 ...
+kk_warn_quiet() {
+    local original_verbosity="$VERBOSITY"
+    VERBOSITY="error"
+    "$@"
+    local exit_code=$?
+    VERBOSITY="$original_verbosity"
+    return $exit_code
+}
+
+# ============================================================================
 # Exports for use in other modules
 # ============================================================================
 

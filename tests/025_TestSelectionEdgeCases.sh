@@ -28,7 +28,7 @@ fi
 # Test kk_runner_parse_selection with invalid format (letters)
 kk_test_start "kk_runner_parse_selection with letters"
 TESTS_TO_RUN=()
-kk_runner_parse_selection "abc"
+kk_warn_quiet kk_runner_parse_selection "abc"
 if (( ${#TESTS_TO_RUN[@]} == 0 )); then
     kk_test_pass "Invalid format (letters) handled gracefully"
 else
@@ -38,7 +38,7 @@ fi
 # Test kk_runner_parse_selection with invalid format (mixed)
 kk_test_start "kk_runner_parse_selection with mixed format"
 TESTS_TO_RUN=()
-kk_runner_parse_selection "1,abc,3"
+kk_warn_quiet kk_runner_parse_selection "1,abc,3"
 # Should parse what it can and ignore invalid parts
 if (( ${#TESTS_TO_RUN[@]} >= 2 )); then
     kk_test_pass "Mixed format handled with partial parsing"
@@ -69,7 +69,7 @@ fi
 # Test kk_runner_parse_selection with negative numbers
 kk_test_start "kk_runner_parse_selection with negative numbers"
 TESTS_TO_RUN=()
-kk_runner_parse_selection "-5"
+kk_warn_quiet kk_runner_parse_selection "-5"
 # Should likely be ignored or handled gracefully
 if (( ${#TESTS_TO_RUN[@]} == 0 )); then
     kk_test_pass "Negative numbers handled gracefully (ignored)"
@@ -162,7 +162,7 @@ fi
 # Test kk_runner_parse_selection with invalid range format
 kk_test_start "kk_runner_parse_selection with invalid range format"
 TESTS_TO_RUN=()
-kk_runner_parse_selection "1-a"
+kk_warn_quiet kk_runner_parse_selection "1-a"
 if (( ${#TESTS_TO_RUN[@]} == 0 )); then
     kk_test_pass "Invalid range format handled gracefully"
 else
@@ -194,7 +194,7 @@ fi
 # Test kk_runner_parse_selection with special characters
 kk_test_start "kk_runner_parse_selection with special characters"
 TESTS_TO_RUN=()
-kk_runner_parse_selection "1@#\$%^&*()"
+kk_warn_quiet kk_runner_parse_selection "1@#\$%^&*()"
 if (( ${#TESTS_TO_RUN[@]} == 0 )); then
     kk_test_pass "Special characters handled gracefully"
 else
@@ -204,7 +204,7 @@ fi
 # Test selection with leading/trailing commas
 kk_test_start "kk_runner_parse_selection with leading/trailing commas"
 TESTS_TO_RUN=()
-kk_runner_parse_selection ",1,2,3,"
+kk_warn_quiet kk_runner_parse_selection ",1,2,3,"
 if (( ${#TESTS_TO_RUN[@]} >= 3 )); then
     kk_test_pass "Leading/trailing commas handled gracefully"
 else
