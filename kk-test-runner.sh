@@ -147,7 +147,7 @@ kk_runner_parse_args() {
     fi
     
     # Export for subshells
-    export VERBOSITY MODE WORKERS TEST_SELECTION FAILED_TEST_FILES _KK_ASSERT_QUIET_MODE
+    export VERBOSITY MODE WORKERS TEST_SELECTION FAILED_TEST_FILES _KK_ASSERT_QUIET_MODE _KK_TEST_QUIET_MODE
 }
 
 # Show usage information
@@ -273,6 +273,7 @@ kk_runner_execute_sequential() {
                  export VERBOSITY='$VERBOSITY'
                  export KK_OUTPUT_COUNTS=1
                  export _KK_ASSERT_QUIET_MODE='$_KK_ASSERT_QUIET_MODE'
+                 export _KK_TEST_QUIET_MODE='$_KK_TEST_QUIET_MODE'
                  source '$clean_file'
                  # Always output counts (needed by runner for result tracking)
                  echo \"__COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED\"

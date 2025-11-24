@@ -46,6 +46,20 @@ kk_assert_quiet() {
     return $result
 }
 
+# Wrapper function to suppress test result output (intentional passes/failures)
+# Useful when testing code that intentionally produces test failures
+# Usage in tests:
+#   kk_test_quiet kk_test_fail "This should fail"
+#   kk_test_quiet kk_test_pass "And this should pass"
+kk_test_quiet() {
+    local old_mode="$_KK_TEST_QUIET_MODE"
+    _KK_TEST_QUIET_MODE="quiet"
+    "$@"
+    local result=$?
+    _KK_TEST_QUIET_MODE="$old_mode"
+    return $result
+}
+
 # ============================================================================
 # Value Assertions
 # ============================================================================

@@ -43,6 +43,10 @@ TESTS_FAILED=0
 # Verbosity levels: "error" (minimal) or "info" (verbose)
 VERBOSITY="${VERBOSITY:-error}"
 
+# Control whether test result output is printed
+# Set to "quiet" to suppress [PASS] and [FAIL] messages for intentional test results
+declare -g _KK_TEST_QUIET_MODE="${_KK_TEST_QUIET_MODE:-normal}"
+
 # ============================================================================
 # Configuration Management
 # ============================================================================
@@ -128,22 +132,30 @@ kk_test_start() {
 # Mark a test as passed
 # Usage: kk_test_pass "Test description"
 kk_test_pass() {
-    if [[ "$VERBOSITY" == "info" ]]; then
+    if [[ "$VERBOSITY" == "info" && "$_KK_TEST_QUIET_MODE" != "quiet" ]]; then
         echo -e "${GREEN}[PASS]${NC} $*"
     fi
-    ((TESTS_PASSED++))
+    # Only increment counter if not in quiet mode (intentional results don't affect stats)
+    if [[ "$_KK_TEST_QUIET_MODE" != "quiet" ]]; then
+        ((TESTS_PASSED++))
+    fi
 }
 
 # Mark a test as failed
 # Usage: kk_test_fail "Test description"
 kk_test_fail() {
     local message="$*"
-    if [[ -n "${KK_TEST_FILE:-}" ]]; then
-        echo -e "${RED}[FAIL]${NC} $message (${KK_TEST_FILE})"
-    else
-        echo -e "${RED}[FAIL]${NC} $message"
+    if [[ "$_KK_TEST_QUIET_MODE" != "quiet" ]]; then
+        if [[ -n "${KK_TEST_FILE:-}" ]]; then
+            echo -e "${RED}[FAIL]${NC} $message (${KK_TEST_FILE})"
+        else
+            echo -e "${RED}[FAIL]${NC} $message"
+        fi
     fi
-    ((TESTS_FAILED++))
+    # Only increment counter if not in quiet mode (intentional results don't affect stats)
+    if [[ "$_KK_TEST_QUIET_MODE" != "quiet" ]]; then
+        ((TESTS_FAILED++))
+    fi
 }
 
 # Backward compatibility aliases (existing test code uses these)
