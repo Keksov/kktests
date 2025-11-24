@@ -3,6 +3,8 @@
 
 source /c/projects/kkbot/lib/kktests/kk-test.sh
 
+kk_test_init "TestPass" "$(dirname "$0")" "$@"
+
 kk_test_start "Test 1 - should pass"
 kk_test_pass "Test 1"
 

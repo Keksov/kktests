@@ -77,6 +77,7 @@ kk_runner_parse_args() {
     TEST_SELECTION=""
     MODE="threaded"
     WORKERS=8
+    _KK_ASSERT_QUIET_MODE="${_KK_ASSERT_QUIET_MODE:-normal}"
     
     # If VERBOSITY is already set from environment, respect it but allow override
     local env_verbosity="$VERBOSITY"
@@ -115,6 +116,10 @@ kk_runner_parse_args() {
                 WORKERS="${1#*=}"
                 shift
                 ;;
+            --suppress-assert-output|--quiet-assertions)
+                _KK_ASSERT_QUIET_MODE="quiet"
+                shift
+                ;;
             -h|--help)
                 kk_runner_show_help
                 exit 0
@@ -142,7 +147,7 @@ kk_runner_parse_args() {
     fi
     
     # Export for subshells
-    export VERBOSITY MODE WORKERS TEST_SELECTION FAILED_TEST_FILES
+    export VERBOSITY MODE WORKERS TEST_SELECTION FAILED_TEST_FILES _KK_ASSERT_QUIET_MODE
 }
 
 # Show usage information
@@ -151,19 +156,23 @@ kk_runner_show_help() {
 Test Runner Usage: test_suite.sh [OPTIONS]
 
 Options:
-  -v, --verbosity LEVEL  Set verbosity level: "info" (verbose) or "error" (quiet)
-                         Default: error
-  
-  -n, --tests SELECTION  Run specific tests by number or range
-                         Examples: "1" "1,3,5" "1-5" "1-3,5,7-9"
-  
-  -m, --mode MODE        Execution mode: "threaded" or "single"
-                         Default: threaded
-  
-  -w, --workers NUM      Number of worker threads in threaded mode
-                         Default: 8
-  
-  -h, --help            Show this help message
+   -v, --verbosity LEVEL  Set verbosity level: "info" (verbose) or "error" (quiet)
+                          Default: error
+   
+   -n, --tests SELECTION  Run specific tests by number or range
+                          Examples: "1" "1,3,5" "1-5" "1-3,5,7-9"
+   
+   -m, --mode MODE        Execution mode: "threaded" or "single"
+                          Default: threaded
+   
+   -w, --workers NUM      Number of worker threads in threaded mode
+                          Default: 8
+   
+   --suppress-assert-output
+                          Suppress [ASSERTION FAILED] messages when using
+                          "if ! kk_assert_*" patterns in tests
+   
+   -h, --help            Show this help message
 
 Examples:
   ./test_suite.sh                           # Run all tests sequentially
@@ -262,8 +271,11 @@ kk_runner_execute_sequential() {
          output="$(
              bash -c "
                  export VERBOSITY='$VERBOSITY'
+                 export KK_OUTPUT_COUNTS=1
+                 export _KK_ASSERT_QUIET_MODE='$_KK_ASSERT_QUIET_MODE'
                  source '$clean_file'
-                 echo __COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED
+                 # Always output counts (needed by runner for result tracking)
+                 echo \"__COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED\"
              " 2>&1 || true
          )"
          
@@ -334,13 +346,15 @@ kk_runner_execute_threaded() {
             [[ -z "$test_file" ]] && break
             
             local output counts_line t p f
-            output="$(
-                bash -c "
-                    export VERBOSITY='$VERBOSITY'
-                    source '$test_file'
-                    echo __COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED
-                " 2>&1 || true
-            )"
+             output="$(
+                 bash -c "
+                     export VERBOSITY='$VERBOSITY'
+                     export KK_OUTPUT_COUNTS=1
+                     source '$test_file'
+                     # Always output counts (needed by runner for result tracking)
+                     echo \"__COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED\"
+                 " 2>&1 || true
+             )"
             
             counts_line="$(printf '%s\n' "$output" | grep '^__COUNTS__:' | tail -n 1)"
             if [[ -n "$counts_line" ]]; then

@@ -16,7 +16,7 @@ fi
 
 # Test kk_assert_array_length with incorrect length
 kk_test_start "kk_assert_array_length with incorrect length"
-if ! kk_assert_array_length test_arr 5 "Array length"; then
+if ! kk_assert_quiet kk_assert_array_length test_arr 5 "Array length"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"

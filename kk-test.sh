@@ -54,10 +54,16 @@ readonly KK_TEST_FRAMEWORK_DIR="$_KK_TEST_ROOT_DIR"
 # ============================================================================
 
 # Quick test setup - one-liner for common initialization
-# Usage: kk_test_init "test_name" "$SCRIPT_DIR"
+# Usage: kk_test_init "test_name" "$SCRIPT_DIR" [... other args passed to test]
 kk_test_init() {
     local test_name="${1:-default}"
     local script_dir="${2:-.}"
+    shift 2
+    
+    # Parse command line arguments if provided
+    if [[ $# -gt 0 ]]; then
+        kk_runner_parse_args "$@"
+    fi
     
     # Set file name for error reporting (from caller's context)
     KK_TEST_FILE="$(basename "${BASH_SOURCE[1]}")"
@@ -66,7 +72,12 @@ kk_test_init() {
     kk_fixture_setup "$test_name" "$script_dir"
     
     # Set up cleanup trap
-    trap 'kk_fixture_teardown' EXIT
+    # Output __COUNTS__ only if KK_OUTPUT_COUNTS is set (used by test runner)
+    if [[ -n "${KK_OUTPUT_COUNTS}" && "${KK_OUTPUT_COUNTS}" != "0" ]]; then
+        trap 'kk_fixture_teardown; echo "__COUNTS__:$TESTS_TOTAL:$TESTS_PASSED:$TESTS_FAILED"' EXIT
+    else
+        trap 'kk_fixture_teardown' EXIT
+    fi
 }
 
 # Show framework information

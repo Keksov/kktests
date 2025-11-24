@@ -15,7 +15,7 @@ fi
 
 # Test kk_assert_success fails with failed command
 kk_test_start "kk_assert_success fails with failed command"
-if ! kk_assert_success "false" "Failed command"; then
+if ! kk_assert_quiet kk_assert_success "false" "Failed command"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"

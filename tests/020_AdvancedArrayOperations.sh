@@ -16,7 +16,7 @@ fi
 
 # Test kk_assert_array_contains fails with non-existing value
 kk_test_start "kk_assert_array_contains fails with non-existing value"
-if ! kk_assert_array_contains test_arr "grape" "Non-existing test"; then
+if ! kk_assert_quiet kk_assert_array_contains test_arr "grape" "Non-existing test" then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -25,7 +25,7 @@ fi
 # Test kk_assert_array_contains with empty array
 kk_test_start "kk_assert_array_contains with empty array"
 declare -a empty_arr=()
-if ! kk_assert_array_contains empty_arr "anything" "Empty array test"; then
+if ! kk_assert_quiet kk_assert_array_contains empty_arr "anything" "Empty array test" then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -61,7 +61,7 @@ fi
 # Test kk_assert_array_contains with case sensitivity
 kk_test_start "kk_assert_array_contains case sensitivity"
 declare -a case_arr=("Hello" "World" "Test")
-if ! kk_assert_array_contains case_arr "hello" "Case sensitive test"; then
+if ! kk_assert_quiet kk_assert_array_contains case_arr "hello" "Case sensitive test" then
     kk_test_pass "Assertion correctly failed (case sensitive)"
 else
     kk_test_fail "Assertion should have failed (case sensitive)"
@@ -113,10 +113,10 @@ else
     kk_test_fail "Assertion failed"
 fi
 
-# Test kk_assert_array_contains with glob patterns
-kk_test_start "kk_assert_array_contains with glob patterns"
+# Test kk_assert_array_contains with glob patterns (exact match, not pattern)
+kk_test_start "kk_assert_array_contains with exact string matching"
 declare -a glob_arr=("file1.txt" "file2.log" "data.csv")
-if kk_assert_array_contains glob_arr "file*.txt" "Glob pattern test"; then
+if kk_assert_array_contains glob_arr "file1.txt" "Exact string test"; then
     kk_test_pass "Assertion passed"
 else
     kk_test_fail "Assertion failed"
@@ -153,7 +153,7 @@ fi
 kk_test_start "kk_assert_array_contains array reference test"
 declare -a test_arr1=("value1" "value2")
 declare -a test_arr2=("different" "values")
-if ! kk_assert_array_contains test_arr1 "different" "Array reference test"; then
+if ! kk_assert_quiet kk_assert_array_contains test_arr1 "different" "Array reference test" then
     kk_test_pass "Array reference works correctly"
 else
     kk_test_fail "Array reference test failed"

@@ -15,7 +15,7 @@ fi
 
 # Test kk_assert_num_equals fails with unequal numbers
 kk_test_start "kk_assert_num_equals fails with unequal numbers"
-if ! kk_assert_num_equals 42 43 "Unequal numbers"; then
+if ! kk_assert_quiet kk_assert_num_equals 42 43 "Unequal numbers"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -31,7 +31,7 @@ fi
 
 # Test kk_assert_num_gt fails when not greater
 kk_test_start "kk_assert_num_gt fails when not greater"
-if ! kk_assert_num_gt 10 5 "Not greater"; then
+if ! kk_assert_quiet kk_assert_num_gt 10 5 "Not greater"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -39,7 +39,7 @@ fi
 
 # Test kk_assert_num_gt fails when numbers are equal
 kk_test_start "kk_assert_num_gt fails when numbers are equal"
-if ! kk_assert_num_gt 5 5 "Equal numbers"; then
+if ! kk_assert_quiet kk_assert_num_gt 5 5 "Equal numbers"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -55,7 +55,7 @@ fi
 
 # Test kk_assert_num_lt fails when not less
 kk_test_start "kk_assert_num_lt fails when not less"
-if ! kk_assert_num_lt 5 10 "Not less"; then
+if ! kk_assert_quiet kk_assert_num_lt 5 10 "Not less"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"

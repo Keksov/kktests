@@ -95,7 +95,10 @@ kk_test_error() {
 
 # Log a warning message (always shown)
 kk_test_warning() {
-    echo -e "${YELLOW}[WARN]${NC} $*" >&2
+    # Only show warnings in info mode
+    if [[ "$VERBOSITY" == "info" ]]; then
+        echo -e "${YELLOW}[WARN]${NC} $*" >&2
+    fi
 }
 
 # Print a section header (shown only if VERBOSITY is "info")

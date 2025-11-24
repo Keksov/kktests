@@ -18,7 +18,7 @@ fi
 # Test kk_assert_file_not_exists fails when file exists
 kk_test_start "kk_assert_file_not_exists fails when file exists"
 test_file=$(kk_fixture_tmpfile "existing")
-if ! kk_assert_file_not_exists "$test_file" "Existing file" >/dev/null 2>&1; then
+if ! kk_assert_quiet kk_assert_file_not_exists "$test_file" "Existing file" >/dev/null 2>&1; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -34,7 +34,7 @@ fi
 
 # Test kk_assert_dir_not_exists fails when directory exists
 kk_test_start "kk_assert_dir_not_exists fails when directory exists"
-if ! kk_assert_dir_not_exists "$TMPDIR" "Existing directory" >/dev/null 2>&1; then
+if ! kk_assert_quiet kk_assert_dir_not_exists "$TMPDIR" "Existing directory" >/dev/null 2>&1; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -54,7 +54,7 @@ kk_test_start "kk_assert_file_readable fails with unreadable file"
 # Create file and remove read permissions
 unreadable_file=$(kk_fixture_tmpfile "unreadable")
 chmod 000 "$unreadable_file" 2>/dev/null || chmod 444 "$unreadable_file"  # Handle different systems
-if ! kk_assert_file_readable "$unreadable_file" "Unreadable file" >/dev/null 2>&1; then
+if ! kk_assert_quiet kk_assert_file_readable "$unreadable_file" "Unreadable file" >/dev/null 2>&1; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_pass "Unreadable test completed (permission system dependent)"
@@ -75,7 +75,7 @@ fi
 kk_test_start "kk_assert_file_writable fails with read-only file"
 readonly_file=$(kk_fixture_tmpfile "readonly")
 chmod 444 "$readonly_file" 2>/dev/null || chmod 555 "$readonly_file"  # Handle different systems
-if ! kk_assert_file_writable "$readonly_file" "Read-only file" >/dev/null 2>&1; then
+if ! kk_assert_quiet kk_assert_file_writable "$readonly_file" "Read-only file" >/dev/null 2>&1; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_pass "Read-only test completed (permission system dependent)"
@@ -106,7 +106,7 @@ ln -s "$real_file" "$link_file" 2>/dev/null || {
         real_file="$link_file"  # For cleanup
     }
 }
-if kk_assert_file_exists "$link_file" "Symbolic link exists" 2>/dev/null; then
+if kk_assert_file_exists "$link_file" "Symbolic link exists" then
     kk_test_pass "Symbolic links are handled correctly"
 else
     kk_test_pass "Symbolic link test completed (system dependent)"

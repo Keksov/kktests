@@ -18,7 +18,7 @@ fi
 
 # Test kk_assert_file_exists fails with missing file
 kk_test_start "kk_assert_file_exists fails with missing file"
-if ! kk_assert_file_exists "/nonexistent/path/file.txt" "Missing file"; then
+if ! kk_assert_quiet kk_assert_file_exists "/nonexistent/path/file.txt" "Missing file"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -34,7 +34,7 @@ fi
 
 # Test kk_assert_dir_exists fails with missing directory
 kk_test_start "kk_assert_dir_exists fails with missing directory"
-if ! kk_assert_dir_exists "/nonexistent/path" "Missing directory"; then
+if ! kk_assert_quiet kk_assert_dir_exists "/nonexistent/path" "Missing directory"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"

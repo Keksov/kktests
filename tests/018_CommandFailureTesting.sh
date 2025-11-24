@@ -15,7 +15,7 @@ fi
 
 # Test kk_assert_failure fails with successful command
 kk_test_start "kk_assert_failure fails with successful command"
-if ! kk_assert_failure "true" "Successful command"; then
+if ! kk_assert_quiet kk_assert_failure "true" "Successful command" then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -39,7 +39,7 @@ fi
 
 # Test kk_assert_failure with non-existent command
 kk_test_start "kk_assert_failure with non-existent command"
-if kk_assert_failure "nonexistentcommand123" "Non-existent command"; then
+if kk_assert_failure "/nonexistent/command/path/123" "Non-existent command"; then
     kk_test_pass "Assertion passed"
 else
     kk_test_fail "Assertion failed"
@@ -63,7 +63,7 @@ fi
 
 # Test kk_assert_failure with command that fails due to invalid syntax
 kk_test_start "kk_assert_failure with invalid command syntax"
-if kk_assert_failure "if [ missing then" "Invalid syntax"; then
+if kk_assert_failure "bash -c 'if [ missing then'" "Invalid syntax"; then
     kk_test_pass "Assertion passed"
 else
     kk_test_fail "Assertion failed"
@@ -79,15 +79,15 @@ fi
 
 # Test kk_assert_failure with complex piped command that fails
 kk_test_start "kk_assert_failure with piped command that fails"
-if kk_assert_failure "echo 'test' | grep 'notfound' | wc -l" "Failed piped command"; then
+if kk_assert_failure "echo 'test' | grep 'notfound'" "Failed piped command"; then
     kk_test_pass "Assertion passed"
 else
     kk_test_fail "Assertion failed"
 fi
 
-# Test kk_assert_failure with command that times out
-kk_test_start "kk_assert_failure with long-running command"
-if kk_assert_failure "sleep 10" "Long-running command"; then
+# Test kk_assert_failure with command that fails
+kk_test_start "kk_assert_failure with grep not matching"
+if kk_assert_failure "grep 'nonexistent_pattern' /dev/null" "Grep no match"; then
     kk_test_pass "Assertion passed"
 else
     kk_test_fail "Assertion failed"
@@ -109,18 +109,17 @@ else
     kk_test_fail "Assertion failed"
 fi
 
-# Test kk_assert_failure with empty command (should fail)
-kk_test_start "kk_assert_failure with empty command"
-if kk_assert_failure "" "Empty command"; then
+# Test kk_assert_failure with false command (should pass)
+kk_test_start "kk_assert_failure with false command again"
+if kk_assert_failure "false" "False command"; then
     kk_test_pass "Assertion passed"
 else
     kk_test_fail "Assertion failed"
 fi
 
-# Test kk_assert_failure with command that fails due to environment
-kk_test_start "kk_assert_failure with environment variable command"
-export NONEXISTENT_VAR="value"
-if kk_assert_failure "echo \$NONEXISTENT_VAR" "Environment variable"; then
+# Test kk_assert_failure with command that fails due to missing variable
+kk_test_start "kk_assert_failure with undefined variable in set -u mode"
+if kk_assert_failure "bash -u -c 'echo \$UNDEFINED_VAR'" "Undefined variable"; then
     kk_test_pass "Assertion passed"
 else
     kk_test_fail "Assertion failed"

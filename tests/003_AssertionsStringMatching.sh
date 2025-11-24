@@ -15,7 +15,7 @@ fi
 
 # Test kk_assert_contains fails when substring missing
 kk_test_start "kk_assert_contains fails when substring missing"
-if ! kk_assert_contains "hello world" "xyz" "Missing substring"; then
+if ! kk_assert_quiet kk_assert_contains "hello world" "xyz" "Missing substring"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -31,7 +31,7 @@ fi
 
 # Test kk_assert_not_contains fails when substring present
 kk_test_start "kk_assert_not_contains fails when substring present"
-if ! kk_assert_not_contains "hello world" "world" "Present substring"; then
+if ! kk_assert_quiet kk_assert_not_contains "hello world" "world" "Present substring"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -47,7 +47,7 @@ fi
 
 # Test kk_assert_matches fails with non-matching pattern
 kk_test_start "kk_assert_matches fails with non-matching pattern"
-if ! kk_assert_matches "test" "[0-9]+" "Non-matching pattern"; then
+if ! kk_assert_quiet kk_assert_matches "test" "[0-9]+" "Non-matching pattern"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
@@ -63,7 +63,7 @@ fi
 
 # Test kk_assert_not_matches fails when pattern matches
 kk_test_start "kk_assert_not_matches fails when pattern matches"
-if ! kk_assert_not_matches "test123" "[0-9]+" "Matching pattern"; then
+if ! kk_assert_quiet kk_assert_not_matches "test123" "[0-9]+" "Matching pattern"; then
     kk_test_pass "Assertion correctly failed"
 else
     kk_test_fail "Assertion should have failed"
