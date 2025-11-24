@@ -116,10 +116,6 @@ kk_runner_parse_args() {
                 WORKERS="${1#*=}"
                 shift
                 ;;
-            --suppress-assert-output|--quiet-assertions)
-                _KK_ASSERT_QUIET_MODE="quiet"
-                shift
-                ;;
             -h|--help)
                 kk_runner_show_help
                 exit 0
