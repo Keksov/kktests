@@ -10,28 +10,42 @@ TEST_DIR=$(kk_fixture_tmpdir_create "runner_test")
 
 # Create sample test files for execution testing
 kk_test_start "Create sample test files for execution"
-cat > "$TEST_DIR/test1.sh" << 'EOF'
+FRAMEWORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/kk-test.sh"
+
+cat > "$TEST_DIR/test1.sh" << EOF
 #!/bin/bash
-source "$(cd "$(dirname "$0")/../../.." && pwd)/kktests/kk-test.sh"
-kk_test_init "Test1" "$(dirname "$0")"
+source "$FRAMEWORK_PATH"
+kk_test_init "Test1" "\$(dirname "\$0")"
 kk_test_start "Test 1 assertion"
-kk_assert_equals "test1" "test1" "Test 1 should pass"
+if kk_assert_equals "test1" "test1" "Test 1 should pass"; then
+    kk_test_pass "Test 1"
+else
+    kk_test_fail "Test 1"
+fi
 EOF
 
-cat > "$TEST_DIR/test2.sh" << 'EOF'
+cat > "$TEST_DIR/test2.sh" << EOF
 #!/bin/bash
-source "$(cd "$(dirname "$0")/../../.." && pwd)/kktests/kk-test.sh"
-kk_test_init "Test2" "$(dirname "$0")"
+source "$FRAMEWORK_PATH"
+kk_test_init "Test2" "\$(dirname "\$0")"
 kk_test_start "Test 2 assertion"
-kk_assert_equals "test2" "test2" "Test 2 should pass"
+if kk_assert_equals "test2" "test2" "Test 2 should pass"; then
+    kk_test_pass "Test 2"
+else
+    kk_test_fail "Test 2"
+fi
 EOF
 
-cat > "$TEST_DIR/test3.sh" << 'EOF'
+cat > "$TEST_DIR/test3.sh" << EOF
 #!/bin/bash
-source "$(cd "$(dirname "$0")/../../.." && pwd)/kktests/kk-test.sh"
-kk_test_init "Test3" "$(dirname "$0")"
+source "$FRAMEWORK_PATH"
+kk_test_init "Test3" "\$(dirname "\$0")"
 kk_test_start "Test 3 assertion"
-kk_assert_equals "test3" "different" "Test 3 should fail"
+if kk_assert_equals "test3" "different" "Test 3 should fail"; then
+    kk_test_pass "Test 3"
+else
+    kk_test_fail "Test 3"
+fi
 EOF
 
 chmod +x "$TEST_DIR/test1.sh" "$TEST_DIR/test2.sh" "$TEST_DIR/test3.sh"
@@ -96,11 +110,32 @@ fi
 
 # Test kk_runner_execute_tests with specific directory
 kk_test_start "kk_runner_execute_tests with specific directory"
+# Create a directory with properly named test files for directory scanning
+dir_test_dir=$(kk_fixture_tmpdir_create "dir_scan_test")
+
+cat > "$dir_test_dir/001_test.sh" << EOF
+#!/bin/bash
+source "$FRAMEWORK_PATH"
+kk_test_init "DirTest1" "\$(dirname "\$0")"
+kk_test_start "Dir test 1"
+kk_assert_equals "a" "a" "Should pass"
+EOF
+
+cat > "$dir_test_dir/002_test.sh" << EOF
+#!/bin/bash
+source "$FRAMEWORK_PATH"
+kk_test_init "DirTest2" "\$(dirname "\$0")"
+kk_test_start "Dir test 2"
+kk_assert_equals "b" "b" "Should pass"
+EOF
+
+chmod +x "$dir_test_dir/001_test.sh" "$dir_test_dir/002_test.sh"
+
 TESTS_TOTAL=0
 TESTS_PASSED=0
 TESTS_FAILED=0
-kk_runner_execute_tests "$TEST_DIR"
-if (( TESTS_TOTAL >= 3 )); then
+kk_runner_execute_tests "$dir_test_dir" >/dev/null 2>&1
+if (( TESTS_TOTAL >= 2 )); then
     kk_test_pass "Directory execution found and ran test files"
 else
     kk_test_fail "Directory execution did not find or run test files"
