@@ -126,7 +126,7 @@ kk_test_start() {
     if [[ "$VERBOSITY" == "info" ]]; then
         echo -e "${BLUE}[TEST]${NC} $*"
     fi
-    ((TESTS_TOTAL++))
+    TESTS_TOTAL=$((TESTS_TOTAL + 1))
 }
 
 # Mark a test as passed
@@ -137,7 +137,7 @@ kk_test_pass() {
     fi
     # Only increment counter if not in quiet mode (intentional results don't affect stats)
     if [[ "$_KK_TEST_QUIET_MODE" != "quiet" ]]; then
-        ((TESTS_PASSED++))
+        TESTS_PASSED=$((TESTS_PASSED + 1))
     fi
 }
 
@@ -154,7 +154,7 @@ kk_test_fail() {
     fi
     # Only increment counter if not in quiet mode (intentional results don't affect stats)
     if [[ "$_KK_TEST_QUIET_MODE" != "quiet" ]]; then
-        ((TESTS_FAILED++))
+        TESTS_FAILED=$((TESTS_FAILED + 1))
     fi
 }
 
