@@ -1,7 +1,10 @@
 #!/bin/bash
 # Unit tests: File system assertion checks
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "AssertionsFileSystemChecks" "$(dirname "$0")"
 
@@ -39,5 +42,3 @@ if ! kt_assert_quiet kt_assert_dir_exists "/nonexistent/path" "Missing directory
 else
     kt_test_fail "Assertion should have failed"
 fi
-
-

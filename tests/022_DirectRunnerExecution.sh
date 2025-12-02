@@ -1,7 +1,10 @@
 #!/bin/bash
 # Unit tests: Direct test runner execution functions
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "DirectRunnerExecution" "$(dirname "$0")"
 

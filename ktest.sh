@@ -14,7 +14,12 @@ fi
 _KTEST_SOURCED=1
 
 # Get the directory where this file is located
-_KTEST_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Use KTESTS_LIB_DIR if already set (from test runner), otherwise compute from BASH_SOURCE
+if [[ -n "$KTESTS_LIB_DIR" ]]; then
+    _KTEST_LIB_DIR="$KTESTS_LIB_DIR"
+else
+    _KTEST_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
 _KTEST_ROOT_DIR="$(dirname "$_KTEST_LIB_DIR")"
 
 # ============================================================================

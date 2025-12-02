@@ -278,6 +278,10 @@ kt_runner_execute_sequential() {
                  export KK_OUTPUT_COUNTS=1
                  export _KT_ASSERT_QUIET_MODE='$_KT_ASSERT_QUIET_MODE'
                  export _KTEST_QUIET_MODE='$_KTEST_QUIET_MODE'
+                 export KT_TESTS_DIR='$(dirname "$clean_file")'
+                 export KTESTS_LIB_DIR='$KTESTS_LIB_DIR'
+                 export KTEST_SOURCE_PATH='$KTESTS_LIB_DIR/ktest_source.sh'
+                 source \"\$KTEST_SOURCE_PATH\"
                  source '$clean_file'
                  # Always output counts (needed by runner for result tracking)
                  echo \"__COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED\"
@@ -373,6 +377,10 @@ kt_runner_execute_threaded() {
                 export KK_OUTPUT_COUNTS=1
                 export _KT_ASSERT_QUIET_MODE='$_KT_ASSERT_QUIET_MODE'
                 export _KTEST_QUIET_MODE='$_KTEST_QUIET_MODE'
+                export KT_TESTS_DIR='$(dirname "$clean_file")'
+                export KTESTS_LIB_DIR='$KTESTS_LIB_DIR'
+                export KTEST_SOURCE_PATH='$KTESTS_LIB_DIR/ktest_source.sh'
+                source \"\$KTEST_SOURCE_PATH\"
                 source '$clean_file'
                 # Always output counts
                 echo \"__COUNTS__:\$TESTS_TOTAL:\$TESTS_PASSED:\$TESTS_FAILED\"

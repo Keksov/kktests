@@ -1,7 +1,10 @@
 #!/bin/bash
 # Unit tests: Numeric assertion checks
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "AssertionsNumericChecks" "$(dirname "$0")"
 
@@ -60,5 +63,3 @@ if ! kt_assert_quiet kt_assert_num_lt 5 10 "Not less"; then
 else
     kt_test_fail "Assertion should have failed"
 fi
-
-

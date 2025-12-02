@@ -1,7 +1,10 @@
 #!/bin/bash
 # Unit tests: Command execution assertions
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "AssertionsCommandExecution" "$(dirname "$0")"
 
@@ -20,5 +23,3 @@ if ! kt_assert_quiet kt_assert_success "false" "Failed command"; then
 else
     kt_test_fail "Assertion should have failed"
 fi
-
-

@@ -1,7 +1,10 @@
 #!/bin/bash
 # Integration tests: Full test framework workflow
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "IntegrationFullWorkflow" "$(dirname "$0")"
 
@@ -85,5 +88,3 @@ if (( TESTS_PASSED >= initial_passed + 5 )); then
 else
     kt_test_fail "Counter increment failed (initial_passed: $initial_passed, current_passed: $TESTS_PASSED, expected: $((initial_passed + 5)))"
 fi
-
-

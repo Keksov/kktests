@@ -1,7 +1,10 @@
 #!/bin/bash
 # Integration tests: Regression scenarios and edge cases
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "RegressionScenarios" "$(dirname "$0")"
 
@@ -42,5 +45,3 @@ fi
 TESTS_TOTAL=0
 TESTS_PASSED=0
 TESTS_FAILED=0
-
-

@@ -1,7 +1,10 @@
 #!/bin/bash
 # Integration tests: Parallel test execution and result aggregation
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "IntegrationParallelExecution" "$(dirname "$0")"
 
@@ -148,5 +151,3 @@ fi
 kt_config_set "verbosity" "error"
 kt_config_set "debug" "false"
 kt_config_set "color" "true"
-
-

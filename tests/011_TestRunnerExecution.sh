@@ -1,7 +1,10 @@
 #!/bin/bash
 # Unit tests: Test runner execution
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "TestRunnerExecution" "$(dirname "$0")"
 
@@ -31,5 +34,3 @@ if (( ${#found_files[@]} >= 1 )); then
 else
     kt_test_fail "No test files discovered"
 fi
-
-

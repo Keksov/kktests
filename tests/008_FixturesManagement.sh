@@ -1,7 +1,10 @@
 #!/bin/bash
 # Unit tests: Test fixtures management
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "FixturesManagement" "$(dirname "$0")"
 
@@ -22,5 +25,3 @@ if [[ -f "$tmpfile" ]]; then
 else
     kt_test_fail "Temp file not created"
 fi
-
-

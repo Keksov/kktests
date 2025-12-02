@@ -1,7 +1,10 @@
 #!/bin/bash
 # Unit tests: Error handling and exception scenarios
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 kt_test_init "ErrorHandlingExceptions" "$(dirname "$0")"
 
@@ -134,5 +137,3 @@ if [[ -z "$retrieved" ]]; then
 else
     kt_test_fail "kt_config_get returned '$retrieved' for missing key"
 fi
-
-

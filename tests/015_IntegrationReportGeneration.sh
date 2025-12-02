@@ -3,7 +3,10 @@
 # 015_IntegrationReportGeneration.sh
 # Integration test: Report generation and result display
 
-source "$(cd "$(dirname "$0")/.." && pwd)/ktest.sh"
+# Only source if framework not already loaded
+if [[ -z "$_KTEST_SOURCED" ]]; then
+    source "$(dirname "$0")/../ktest_source.sh" || source "$KTEST_SOURCE_PATH" || exit 1
+fi
 
 # Set file name for error reporting
 kt_test_init "ReportGeneration" "$(dirname "$0")"
@@ -251,5 +254,3 @@ if [[ -n "$KT__FRAMEWORK_VERSION" && -n "$TESTS_TOTAL" ]]; then
 else
     kt_test_fail "Framework verification failed"
 fi
-
-
